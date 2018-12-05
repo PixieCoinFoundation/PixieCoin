@@ -1,5 +1,3 @@
-Project cleaning.Please wait for update.
-
 # 2018-10-20.Alpha version of Pixie Shopping Street released!
 
 # PixieCoin
