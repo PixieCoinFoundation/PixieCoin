@@ -1,0 +1,38 @@
+CURDIR=`pwd`
+OLDGOPATH="$GOPATH"
+export GOPATH="$CURDIR"
+
+st=""
+
+if [ "$1" = "GM" ]; then
+   st="GM"
+fi
+
+if [ "$1" = "GL" ]; then
+   st="GL"
+fi
+
+if [ "$1" = "GV" ]; then
+   st="GV"
+fi
+
+if [ "$1" = "SF" ]; then
+   st="S_FILE_SERVER"
+fi
+
+if [ "$1" = "SIMPLE_TEST" ]; then
+   st="SIMPLE_TEST"
+fi
+
+echo $GOPATH
+if [ "$st" = "" ]; then
+echo "start game server"
+go run ./src/launcher/launcher.go
+else
+echo "start $st server"
+go run ./src/launcher/launcher.go -st $st
+fi
+
+export GOPATH="$OLDGOPATH"
+
+echo "finished"

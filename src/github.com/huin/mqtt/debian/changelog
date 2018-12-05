@@ -1,0 +1,5 @@
+golang-huin-mqtt (0.0~git20130822+c2d0e7c-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)
+
+ -- Kouhei Maeda <mkouhei@palmtb.net>  Mon, 10 Feb 2014 16:34:06 +0900

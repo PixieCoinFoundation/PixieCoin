@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+    <script src="plugins/layui/layui.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+</head>
+
+<body>
+    <div style="margin: 15px;">
+        <blockquote class="layui-elem-quote title layui-bg-cyan">未开始维护</blockquote>
+
+        <table id="tableAgo" lay-filter="test"></table>
+
+        <blockquote class="layui-elem-quote title layui-bg-green">进行中维护</blockquote>
+        <table id="tableIng" lay-filter="test"></table>
+
+        <blockquote class="layui-elem-quote title layui-bg-red">发布-维护</blockquote>
+        <form class="layui-form" id="mainTain" action="">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">维护正文:</label>
+                <div class="layui-input-block">
+                    <textarea name="textarea" placeholder="请填写推送正文" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">跳转地址:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="url" lay-verify="required" placeholder="请填写维护跳转地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始时间:</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="startTime" id="test-laydate-type-datetime-start" lay-key="7">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">展示时间:</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="showTime" id="test-laydate-type-datetime-showTime" lay-key="7">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">结束时间:</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="endTime" id="test-laydate-type-datetime-end" lay-key="7">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="submit" id="btn_submit" lay-filter="formDemo">确认上传</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+        <blockquote class="layui-elem-quote title layui-bg-black">已结束维护</blockquote>
+        <table id="tableAfter" lay-filter="test"></table>
+
+    </div>
+
+
+    <script>
+        layui.use(['jquery', 'form', 'table', 'laydate'], function() {
+            var form = layui.form; //监听提交 
+            var laydate = layui.laydate;
+            var table = layui.table;
+
+            var $ = layui.$,
+                layer = layui.layer;
+
+            var res = {}
+            $.ajax({
+                url: "http://47.96.67.246:29970/mainTainJob",
+                type: "get",
+                async: false,
+                success: function(data) {
+                    res = data
+                },
+                error: function(data) {}
+            });
+
+            var table = layui.table;
+
+            //第一个实例
+            table.render({
+                elem: '#tableAgo',
+                height: 180,
+                page: false,
+                data: res.MainTainAgo,
+                cols: [
+                    [{
+                        field: 'ID',
+                        title: 'ID',
+                        sort: true,
+                    }, {
+                        field: 'Content',
+                        title: '维护内容'
+                    }, {
+                        field: 'StartTime',
+                        title: '维护开始时间'
+                    }, {
+                        field: 'EndTime',
+                        title: '维护结束时间'
+                    }, {
+                        field: 'URL',
+                        title: '超链接'
+                    }]
+                ]
+            });
+            table.render({
+                elem: '#tableIng',
+                height: 180,
+                page: false,
+                data: res.MainTainIng,
+                cols: [
+                    [{
+                        field: 'ID',
+                        title: 'ID',
+                        sort: true,
+                    }, {
+                        field: 'Content',
+                        title: '维护内容'
+                    }, {
+                        field: 'StartTime',
+                        title: '维护开始时间'
+                    }, {
+                        field: 'EndTime',
+                        title: '维护结束时间'
+                    }, {
+                        field: 'URL',
+                        title: '超链接'
+                    }]
+                ]
+            });
+            table.render({
+                elem: '#tableAfter',
+                page: false,
+                data: res.MainTainAfter,
+                cols: [
+                    [{
+                        field: 'ID',
+                        title: 'ID',
+                        width: 80,
+                        sort: true,
+                    }, {
+                        field: 'Content',
+                        title: '维护内容'
+                    }, {
+                        field: 'StartTime',
+                        title: '维护开始时间'
+                    }, {
+                        field: 'EndTime',
+                        title: '维护结束时间'
+                    }, {
+                        field: 'URL',
+                        title: '超链接'
+                    }]
+                ]
+            });
+
+
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#test-laydate-type-datetime-start', //指定元素
+                type: 'datetime',
+                value: '2018-08-01 00:00:00'
+            });
+            laydate.render({
+                elem: '#test-laydate-type-datetime-showTime', //指定元素
+                type: 'datetime',
+                value: '2018-08-01 00:00:00'
+            });
+            laydate.render({
+                elem: '#test-laydate-type-datetime-end', //指定元素
+                type: 'datetime',
+                value: '2018-08-01 00:00:00'
+            });
+
+            var form = layui.form; //监听提交 
+            form.on('submit(mainTain)', function(data) {
+                return false
+            });
+
+            $(document).on('click', '#btn_submit', function() {
+                $('#mainTain').ajaxSubmit( //ajax方式提交表单  
+                    {
+                        url: 'http://47.96.67.246:29970/addMaintenance',
+                        type: 'post',
+                        dataType: 'json',
+                        async: false,
+                        success: function(mes) {
+                            if (mes.status == 200) {
+                                layer.msg("success", {
+                                    icon: 6,
+                                    time: 3000,
+                                    end: function() {
+                                        location.reload();
+                                    }
+                                })
+                            } else {
+                                layer.msg("提交失败,错误原因" + mes.responseJSON.errmsg, {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+                        },
+                        error: function(mes) {
+                            if (mes.status == 200) {
+                                layer.msg("success", {
+                                    icon: 6,
+                                    time: 3000,
+                                    end: function() {
+                                        location.reload();
+                                    }
+                                })
+                            } else {
+                                layer.msg("提交失败,错误原因" + mes.responseJSON.errmsg, {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+                        },
+                        clearForm: false, //禁止清楚表单  
+                        resetForm: false //禁止重置表单  
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

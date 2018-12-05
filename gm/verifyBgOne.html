@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="./css/global.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
+    <script src="./plugins/layui/layui.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+    <style>
+        .layui-table img {
+            max-width: 1000px;
+        }
+        
+        .layui-form-checked i,
+        .layui-form-checkbox i {
+            display: none;
+        }
+        
+        .layui-form-label {
+            text-align: left;
+            padding: 9px 10px;
+        }
+        
+        .layui-form-item .layui-form-checkbox {
+            padding-right: 0;
+        }
+        
+        .layui-form-item .layui-form-checkbox span {
+            border-radius: 8px;
+        }
+    </style>
+
+    <script id="statusTpl" type="text/html">{{d.Status}}</script>
+    <script id="smallPicTpl" type="text/html">
+        <div style="float:left;position:relative;height:129px;width:138px;">
+            <img src="{{d.IconImg}}" alt="Icon" width="129" height="129" style="position:absolute;border:2px solid blue;padding: 2px;">
+            <img src="./images/icon_standard.png" alt="Icon" width="138" height="129" style="position:absolute;">
+        </div>
+    </script>
+    <script id="authUsernameTpl" type="text/html">{{d.AuthorUsername}}</script>
+    <script id="partTypeTpl" type="text/html">{{d.PartType}}</script>
+    <script id="clothesTypeTpl" type="text/html">{{d.ClothesType}}</script>
+    <script id="clothesIDTpl" type="text/html">{{d.PaperID}}</script>
+    <script id="clothesDescTpl" type="text/html">{{d.Desc}}</script>
+    <script id="clothesLayerTpl" type="text/html">{{d.ClothesLayer}}</script>
+    <script id="bodyImgTpl" type="text/html">
+        <div style="float:left;position:relative;height:640px;width:640px;">
+            <img src="{{d.Back}}" alt="Model_main" width="640px" height="640px" style="position:absolute;  z-index:{{d.ClothesLayer}};">
+            <img src="{{d.Front}}" width="640px" height="640px" style="position:absolute;  z-index:-{{d.ClothesLayer}};">
+        </div>
+    </script>
+    <script id="topLayerTpl" type="text/html">
+        <img src="{{d.Front}}" alt="bottom" style="border:2px solid blue;padding: 2px;">
+    </script>
+    <script id="mainLayerTpl" type="text/html">
+        <img src="{{d.Back}}" alt="main" style="border:2px solid blue;padding: 2px;">
+    </script>
+    <script id="iconGameTpl" type="text/html">
+        <div style="float:left;position:relative;height:226px;width:162px;background:url(./images/ui_common_goods_bg.png) no-repeat 0 0;text-align: center;">
+            <span style="height: 100%;display: inline-block;vertical-align: middle;"></span>
+            <img src="{{d.IconImg}}" alt="main" style="z-index:2;margin-top:{{d.IconX}}px;margin-left:{{d.IconY}}px;vertical-align: middle;" width="102" height="144">
+        </div>
+    </script>
+    <script id="recentlyTpl" type="text/html">
+        {{# layui.each(d.RecentlyPaper, function(index, item){ }}
+        <td>
+            <p>{{item.PaperID}}</p>
+            <div style="float:left;position:relative;height:129px;width:138px;">
+                <img src="{{ item.Icon }}" alt="Icon" width="138" height="129" style="position:absolute;border:2px solid blue;padding: 2px;">
+                <img src="./images/ui_common_goods_bg.png" alt="stand" width="138" height="129" style="position:absolute;">
+            </div>
+            {{# }); }} {{# if(d.RecentlyPaper.length === 0){ }} 无数据 {{# } }}
+        </td>
+    </script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="demoTable" style="margin: 15px; ">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>服装预审</legend>
+        </fieldset>
+        <table class="layui-table">
+            <tbody>
+                <tr>
+                    <td>状态:</td>
+                    <td>
+                        <div id="status"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>缩略图:</td>
+                    <td>
+                        <div id="smallPic"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>作者用户名:</td>
+                    <td>
+                        <div id="authUsername"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>模特性别:</td>
+                    <td>
+                        <div id="clothesType"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>服装类别</td>
+                    <td>背景</td>
+                </tr>
+                <tr>
+                    <td>服装ID</td>
+                    <td>
+                        <div id="clothesID"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>服装描述</td>
+                    <td>
+                        <div id="clothesDesc"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>设计师填写图层</td>
+                    <td>
+                        <div id="clothesLayer"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>全身图</td>
+                    <td>
+                        <div id="bodyImg"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>上层</td>
+                    <td>
+                        <div id="topLayer"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>下层</td>
+                    <td>
+                        <div id="mainLayer"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>处理后的图标</td>
+                    <td>
+                        <div id="iconOrigin"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>游戏内图标预览</td>
+                    <td>
+                        <div id="iconGame"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>最近10件作品图标</td>
+                    <td>
+                        <div id="recently"></div>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        <form class="layui-form" id="formData" enctype="multipart/form-data">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择拒绝理由</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="妆容大图与图标请上传完整头部" title="妆容大图与图标请上传完整头部">
+                    <input type="radio" name="rejectReason" value="请勿带模特上传" title="请勿带模特上传">
+                    <input type="radio" name="rejectReason" value="请勿直接使用网络图片或照片" title="请勿直接使用网络图片或照片">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="作品不够优秀，继续加油" title="作品不够优秀，继续加油">
+                    <input type="radio" name="rejectReason" value="作品图不够清晰" title="作品图不够清晰">
+                    <input type="radio" name="rejectReason" value="作品内容过于简单，请丰富作品内容" title="作品内容过于简单，请丰富作品内容">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="大图空白区域没有擦干净" title="大图空白区域没有擦干净">
+                    <input type="radio" name="rejectReason" value="图标空白区域没有擦干净" title="图标空白区域没有擦干净">
+                    <input type="radio" name="rejectReason" value="大图背景不透明" title="大图背景不透明">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="图标背景不透明" title="图标背景不透明">
+                    <input type="radio" name="rejectReason" value="图标过大" title="图标过大">
+                    <input type="radio" name="rejectReason" value="图标过小" title="图标过小">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="图标不居中" title="图标不居中">
+                    <input type="radio" name="rejectReason" value="图标与大图不符" title="图标与大图不符">
+                    <input type="radio" name="rejectReason" value="暂不支持自定义背景" title="暂不支持自定义背景">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="款式重复" title="款式重复">
+                    <input type="radio" name="rejectReason" value="作品元素未获得授权" title="作品元素未获得授权">
+                    <input type="radio" name="rejectReason" value="涉嫌恐怖、暴力" title="涉嫌恐怖、暴力">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="过于暴露，不适合展示" title="过于暴露，不适合展示">
+                    <input type="radio" name="rejectReason" value="类别错误" title="类别错误">
+                    <input type="radio" name="rejectReason" value="层级错误" title="层级错误">
+                </div>
+                <div class="layui-input-block">
+                    <input type="radio" name="rejectReason" value="大图与模特错位 " title="大图与模特错位">
+                    <input type="radio" name="rejectReason" value="不得修改模特姿势" title="不得修改模特姿势">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">补充拒绝理由</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="paperID" id="paperID">
+                    <textarea name="reason" placeholder="请输入" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="submin" name="submit" value="pass" lay-filter="pass">通过</button>
+                <button class="layui-btn" lay-submit="reject" name="submit" value="reject" lay-filter="reject">拒绝</button>
+                <a href="javascript:history.back()" type="button" class="layui-btn layui-btn-primary">返回</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        layui.use(['table', 'laytpl', 'form', 'layer'], function() {
+            var table = layui.table;
+            var laytpl = layui.laytpl;
+            var form = layui.form; //监听提交 
+            var res = {}
+            var cDark = 0,
+                limitDark = 1;
+            var url = location.search;
+            var id = url.split('?')[1].split('&')[0].split('=')[1];
+            $("#paperID").val(id);
+            form.render();
+            $.ajax({
+                url: "/verifyOne/" + id,
+                type: "get",
+                async: false,
+                success: function(data) {
+                    res = data.data
+                },
+                error: function(data) {}
+            });
+         
+            form.on('checkbox(doCheckDark)', function(data) {
+                this.checked ? cDark++ : cDark--;
+                if (cDark > limitDark) {
+                    this.checked = false;
+                    cDark--;
+                    layer.msg('最多只能选一个暗标签', {
+                        icon: 1,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function() {});
+                    form.render('checkbox');
+                }
+            });
+            form.on('submit(pass)', function(data) {
+                $.ajax({
+                    url: "/passVerify",
+                    type: "POST",
+                    data: data.field,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.errcode == 200) {
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                time: 600
+                            }, function() {
+                                location.href = "/verfiyBgList.html";
+                            });
+                        }
+                    },
+                    error: function(data) {
+                        if (data.responseJSON.errcode==1000){
+                            window.open("/login.html","_top"); 
+                        }else{
+                           layer.msg("拒绝失败:" + data.responseJSON.errmsg, {
+                                time: 1000
+                        });  
+                        }
+                    }
+                });
+                return false;
+            });
+            form.on('submit(reject)', function(data) {
+                $.ajax({
+                    url: "/rejectVerify",
+                    type: "POST",
+                    data: data.field,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.errcode == 200) {
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                time: 600
+                            }, function() {
+                                location.href = "/verfiyBgList.html";
+                            });
+                        } 
+                    },
+                    error: function(data) {
+                        layer.msg("拒绝失败:" + data.responseJSON.errmsg, {
+                                time: 1000
+                        });
+                    }
+                });
+                return false;
+            });
+
+
+            laytpl(statusTpl.innerHTML).render(res, function(html) {
+                document.getElementById('status').innerHTML = html;
+            });
+            laytpl(smallPicTpl.innerHTML).render(res, function(html) {
+                document.getElementById('smallPic').innerHTML = html;
+            });
+            laytpl(authUsernameTpl.innerHTML).render(res, function(html) {
+                document.getElementById('authUsername').innerHTML = html;
+            });
+            laytpl(clothesTypeTpl.innerHTML).render(res, function(html) {
+                document.getElementById('clothesType').innerHTML = html;
+            });
+            laytpl(clothesIDTpl.innerHTML).render(res, function(html) {
+                document.getElementById('clothesID').innerHTML = html;
+            });
+            laytpl(clothesDescTpl.innerHTML).render(res, function(html) {
+                document.getElementById('clothesDesc').innerHTML = html;
+            });
+            laytpl(clothesLayerTpl.innerHTML).render(res, function(html) {
+                document.getElementById('clothesLayer').innerHTML = html;
+            });
+            laytpl(bodyImgTpl.innerHTML).render(res, function(html) {
+                document.getElementById('bodyImg').innerHTML = html;
+            });
+            laytpl(topLayerTpl.innerHTML).render(res, function(html) {
+                document.getElementById('topLayer').innerHTML = html;
+            });
+            laytpl(mainLayerTpl.innerHTML).render(res, function(html) {
+                document.getElementById('mainLayer').innerHTML = html;
+            });
+            laytpl(iconGameTpl.innerHTML).render(res, function(html) {
+                document.getElementById('iconGame').innerHTML = html;
+            });
+            laytpl(recently.innerHTML).render(res, function(html) {
+                document.getElementById('recentlyTpl').innerHTML = html;
+            });
+        });
+    </script>
+
+</body>
+
+</html>

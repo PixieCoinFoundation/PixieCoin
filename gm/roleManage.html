@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="./css/global.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
+    <script src="./plugins/layui/layui.js">
+    </script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="demoTable" style="margin: 15px;">
+        <blockquote class="layui-elem-quote quoteBox">
+            <div class="layui-inline">
+                <a href="/addRoleAuth.html" type="button" class="layui-btn">新增角色</a>
+            </div>
+        </blockquote>
+
+        <table class="layui-table" lay-data="{height:470, url:'http://47.96.67.246:29970/getRoleList', page:true, id:'test'}" lay-filter="test">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'ID', width:60, sort: true}">ID</th>
+                    <th lay-data="{field:'RoleName', width:80}">角色名称</th>
+                    <th lay-data="{field:'Desc', width:120}">描述</th>
+                    <th lay-data="{field:'Disable'}">是否可用</th>
+                    <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" id="aclick" lay-event="detail">权限修改</a>
+    </script>
+    <script>
+        layui.use(['layer', 'table', 'form'], function() {
+            var table = layui.table;
+            var form = layui.form; //监听提交 
+            table.on('tool(test)', function(obj) {
+                var data = obj.data;
+                layer.open({
+                    type: 2,
+                    title: '菜单详情',
+                    area: ['450px', '350px'],
+                    shade: 0,
+                    maxmin: true,
+                    content: '/apiDetail.html?roleID=' + data.ID,
+                    btn: ['关闭'],
+                    yes: function() {
+                        layer.closeAll();
+                    },
+                    btn2: function() {
+                        layer.closeAll();
+                    },
+                    zIndex: layer.zIndex,
+                    success: function(layero) {
+                        layer.setTop(layero);
+                    }
+                });
+            });
+        })
+    </script>
+
+</body>
+
+</html>

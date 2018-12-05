@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+    <script src="plugins/layui/layui.js">
+    </script>
+    <style>
+        table {
+            table-layout: fixed;
+            word-break: break-all;
+        }
+        
+        div {
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="margin: 15px;">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">玩家ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="playerID" placeholder="玩家ID" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">玩家名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="username" placeholder="玩家名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <fieldset class="layui-elem-field">
+            <legend>玩家信息</legend>
+            <div id="info1"></div>
+            <div class="layui-collapse" lay-accordion id="extraInfo" style="display:none">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">官方服装列表</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="OClothes"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">官方服装列表</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="Clothes"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">我的家</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="HomeShow"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">套装列表</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="SuitMap"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">关卡信息</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="RecordMap"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">Npc亲密度</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="NpcFriendship"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">NpcBuff</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="NpcBuff"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">街道信息</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="StreetOperate"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">日常信息</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="DayExtraInfo"></div>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">日常信息1</h2>
+                    <div class="layui-colla-content layui-show">
+                        <div id="ExtraInfo1"></div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <script id="OClothesTpl" type="text/html">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <th>服装ID</th>
+                <th>数量</th>
+                <th>时间</th>
+            </tr>
+            {{# layui.each(d.OffClothesList, function(index, item){ }}
+            <tr>
+                <td>{{ item.ClothesID }}</td>
+                <td>{{ item.Count }}</td>
+                <td>{{ item.Time }}</td>
+            </tr>
+            {{# }); }} {{# if(d.OffClothesList.length === 0){ }} 无数据 {{# } }}
+        </table>
+    </script>
+    <script id="ClothesTpl" type="text/html">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <th>服装ID</th>
+                <th>数量</th>
+                <th>时间</th>
+                <th>操作</th>
+            </tr>
+            {{# layui.each(d.ClothesList, function(index, item){ }}
+            <tr>
+                <td>{{ item.ClothesID }}</td>
+                <td>{{ item.Count }}</td>
+                <td>{{ item.Time }}</td>
+            </tr>
+            {{# }); }} {{# if(d.ClothesList.length === 0){ }} 无数据 {{# } }}
+        </table>
+    </script>
+    <script id="HomeShowTpl" type="text/html ">
+        <table lay-filter="test " class="layui-table ">
+            <tr>
+                <th>Left</th>
+                <th>Right</th>
+                <th>Middle</th>
+                <th>背景</th>
+                <th>展示顺序</th>
+            </tr>
+            <tr>
+                <td>{{d.HomeShow.Left.ModelSuit}}</td>
+                <td>{{d.HomeShow.Right.ModelSuit}}</td>
+                <td>{{d.HomeShow.Middle.ModelSuit}}</td>
+                <td>{{d.HomeShow.Background}}</td>
+                <td>{{d.HomeShow.ShowOrder}}</td>
+            </tr>
+        </table>
+    </script>
+    <script id="SuitMapTpl" type="text/html ">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <th>服装ID</th>
+                <th>数量</th>
+                <th>时间</th>
+            </tr>
+            {{# layui.each(d.OffClothesList, function(index, item){ }}
+            <tr>
+                <td>{{ item.ClothesID }}</td>
+                <td>{{ item.Count }}</td>
+                <td>{{ item.Time }}</td>
+            </tr>
+            {{# }); }} {{# if(d.OffClothesList.length === 0){ }} 无数据 {{# } }}
+        </table>
+    </script>
+    <script id="RecordMapTpl" type="text/html ">
+        <table lay-filter="test " class="layui-table ">
+            <tr>
+                <th>关卡ID</th>
+                <th>Score</th>
+                <th>BestScore</th>
+                <th>排名</th>
+                <th>衣服</th>
+                <th>最佳服装</th>
+                <th>历史排名</th>
+            </tr>
+            {{# layui.each(d.RecordList, function(index, item){ }}
+            <tr>
+                <td>{{ item.ID }}</td>
+                <td>{{ item.Score }}</td>
+                <td>{{ item.BestScore }}</td>
+                <td>{{ item.Rank }}</td>
+                <td>{{ item.Clothes }}：</td>
+                <td>{{ item.BestClothes }}</td>
+                <td>{{ item.HistoryRank }}</td>
+            </tr>
+            {{# }); }} {{# if(d.RecordList.length === 0){ }} 无数据 {{# } }}
+        </table>
+    </script>
+    <script id="NpcFriendshipTpl" type="text/html ">
+        <table lay-filter="test " class="layui-table ">
+            <tr>
+                <th>NpcID</th>
+                <th>Level</th>
+                <th>经验</th>
+            </tr>
+            {{# layui.each(d.NpcFriendship, function(index, item){ }}
+            <tr>
+                <td>{{ item.NpcID }}</td>
+                <td>{{ item.Level }}：</td>
+                <td>{{ item.Exp }}</td>
+            </tr>
+            {{# }); }} {{# if(d.NpcFriendship.length === 0){ }} 无数据 {{# } }}
+        </table>
+    </script>
+    <script id="NpcBuffTpl" type="text/html">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <td>{{d.NpcBuff}}</td>
+            </tr>
+        </table>
+    </script>
+
+    <script id="StreetOperateTpl" type="text/html">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <td style="width:300px;word-wrap:break-word;">{{d.StreetOperate}}</td>
+            </tr>
+        </table>
+    </script>
+    <script id="DayExtraInfoTpl" type="text/html">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <td style="width:300px; word-wrap:break-word;">{{d.DayExtraInfo}}</td>
+            </tr>
+        </table>
+    </script>
+    <script id="ExtraInfo1Tpl" type="text/html">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <td style="width:300px;word-wrap:break-word;">{{d.ExtraInfo1}}</td>
+            </tr>
+        </table>
+    </script>
+
+    <script id="info" type="text/html ">
+        <table lay-filter="test" class="layui-table">
+            <tr>
+                <td colspan="2">玩家UID:{{d.Uid}}</td>
+                <td rowspan="5" align="center" valign="middle">
+                    <img src="{{d.Head}} " alt="头像 ">
+                </td>
+            </tr>
+            <tr>
+                <td>玩家名称:{{d.Username}}</td>
+                <td>玩家昵称:{{d.Nickname}}</td>
+            </tr>
+            <tr>
+                <td>注册时间:{{d.DayExtraInfo.RegTime}}</td>
+                <td>VIP等级:{{d.Level}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">性别:{{d.Sex}}</td>
+            </tr>
+
+            <tr>
+                <td>金币:{{ d.Money }}</td>
+                <td>体力:{{ d.Tili }}</td>
+            </tr>
+            <tr>
+                <td>最大体力:{{ d.MaxTili }}</td>
+                <td colspan="3 ">街道名称:{{ d.StreetName }}</td>
+            </tr>
+            <tr>
+                <td>封禁原因:{{d.BanReason}}</td>
+                <td colspan="3 ">封禁信息:{{ d.BanStartTime }}---{{ d.BanEndTime }}</td>
+            </tr>
+        </table>
+    </script>
+
+
+
+</body>
+<script>
+    layui.use(['laytpl', 'jquery', 'layer', 'form', 'table', 'element'], function() {
+        var laytpl = layui.laytpl;
+        var form = layui.form;
+        var table = layui.table;
+
+        var $ = layui.$,
+            layer = layui.layer;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data) {
+            $("#extraInfo").attr("style", "display:block;"); //显示div
+            $.ajax({
+                url: '/getPlayer/' + $("#playerID ").val(),
+                method: 'get',
+                data: data.field,
+                async: false,
+                dataType: 'JSON',
+                success: function(res) {
+                    laytpl(info.innerHTML).render(res, function(html) {
+                        document.getElementById('info1').innerHTML = html;
+                    });
+                    laytpl(HomeShowTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('HomeShow').innerHTML = html;
+                    });
+                    laytpl(OClothesTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('OClothes').innerHTML = html;
+                    });
+                    laytpl(ClothesTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('Clothes').innerHTML = html;
+                    });
+                    laytpl(SuitMapTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('SuitMap').innerHTML = html;
+                    });
+                    laytpl(RecordMapTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('RecordMap').innerHTML = html;
+                    });
+                    laytpl(NpcFriendshipTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('NpcFriendship').innerHTML = html;
+                    });
+                    laytpl(NpcBuffTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('NpcBuff').innerHTML = html;
+                    });
+                    laytpl(StreetOperateTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('StreetOperate').innerHTML = html;
+                    });
+                    laytpl(DayExtraInfoTpl.innerHTML).render(res, function(html) {
+                        document.getElementById('DayExtraInfo').innerHTML = html;
+                    });
+                    laytpl(ExtraInfo1Tpl.innerHTML).render(res, function(html) {
+                        document.getElementById('ExtraInfo1').innerHTML = html;
+                    });
+                },
+                error: function(data) {
+                    layer.msg('玩家不存在', {
+                        icon: 1,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function() {
+
+                    });
+                }
+            })
+            return false;
+        });
+    });
+</script>
+</html>

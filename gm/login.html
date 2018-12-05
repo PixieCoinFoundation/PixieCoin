@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/login.css" />
+    <script type="text/javascript" src="plugins/layui/layui.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+</head>
+
+<body class="beg-login-bg">
+    <div class="beg-login-box">
+        <header>
+            <h1>后台登录</h1>
+        </header>
+        <div class="beg-login-main">
+            <form class="layui-form" id="loginForm">
+                <div class="layui-form-item">
+                    <label class="beg-login-icon">
+                        <i class="layui-icon">&#xe612;</i>
+                    </label>
+                    <input type="text" name="username" lay-verify="userName" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="beg-login-icon">
+                        <i class="layui-icon">&#xe642;</i>
+                    </label>
+                    <input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+                </div>
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" id="login">登陆</button>
+                </div>
+            </form>
+        </div>
+        <footer>
+            <p>Otakugame妖精购物街</p>
+        </footer>
+    </div>
+   <script>
+    function deleteAllCookies() {
+        var cookies = document.cookie.split(";");
+        // cookie.setPath("/")
+     for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+    }
+    </script> 
+    <script>
+        layui.use(['layer', 'form'], function() {
+          
+          
+            $(document).on('click', '#login', function() {
+                deleteAllCookies()
+                $('#loginForm').ajaxSubmit({
+                    url: '/login',
+                    type: "Post",
+                    data: {
+                        username: $('#username').val(),
+                        password: $('#password').val(),
+                    },
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) {
+                        window.location.href = "/index.html"
+                        return false
+                    },
+                    error: function(data) {
+                        layer.msg("fail", {
+                            icon: 5,
+                            time: 3000,
+                            end: function() {}
+                        })
+                        return false
+                    }
+                })
+
+            })
+        })
+    </script>
+</body>
+
+</html>

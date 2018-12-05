@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>菜单编辑页</title>
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="./css/global.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
+    <script src="./plugins/layui/layui.js">
+    </script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body class="child-body">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <form class="layui-form" id="formData" action="" method="post">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">角色</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="roleName" id="roleName" lay-verify="required" lay-vertype="tips" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="roleDesc" id="roleDesc" lay-vertype="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+                            <a href="javascript:history.back()" type="button" class="layui-btn layui-btn-primary">返回</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        layui.use(['element', 'form'], function() {
+            $ = layui.jquery;
+            var form = layui.form;
+            //监听提交
+            form.on('submit(save)', function(data) {
+                $('#formData').ajaxSubmit( //ajax方式提交表单  
+                    {
+                        url: '/addRole',
+                        type: 'post',
+                        dataType: 'json',
+                        async: false,
+                        success: function(mes) {
+                            layer.msg("success", {
+                                icon: 6,
+                                time: 3000,
+                                end: function() {
+                                    location.reload();
+                                }
+                            })
+                        },
+                        error: function(mes) {
+                            layer.msg("提交失败,错误原因" + mes.responseJSON.errmsg, {
+                                icon: 5,
+                                time: 3000,
+                                end: function() {
+                                    $('#btn_submit').attr("disabled", "enable");
+                                    form.render();
+                                }
+                            })
+                        },
+                        clearForm: false, //禁止清楚表单  
+                        resetForm: false //禁止重置表单  
+                    });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

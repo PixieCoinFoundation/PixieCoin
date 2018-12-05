@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="./css/global.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
+    <script src="./plugins/layui/layui.js">
+    </script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="demoTable" style="margin: 15px;">
+        <blockquote class="layui-elem-quote quoteBox">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input searchVal" placeholder="请输入搜索内容">
+                </div>
+                <a class="layui-btn" data-type="reload">搜索</a>
+            </div>
+        </blockquote>
+
+        <table class="layui-table" lay-data="{height:470, url:'/getOfficialClothes', page:true, id:'test'}" lay-filter="test">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'ID', width:60, sort: true}">ID</th>
+                    <th lay-data="{field:'Cname', width:80}">名称</th>
+                    <th lay-data="{field:'Desc', width:120}">描述</th>
+                    <th lay-data="{field:'ClothesType'}">模特类型</th>
+                    <th lay-data="{field:'PartType'}">部位</th>
+                    <th lay-data="{field:'PaperStyle'}">风格评分</th>
+                    <th lay-data="{field:'PriceType'}">价格类型</th>
+                    <th lay-data="{field:'Price'}">价格</th>
+                    <th lay-data="{field:'Star', sort: true}">星级</th>
+                    <th lay-data="{field:'Tag1', sort: true}">Tag1</th>
+                    <th lay-data="{field:'Tag2', sort: true}">Tag2</th>
+                    <th lay-data="{field:'UnlockLevel'}">解锁关卡</th>
+                    <th lay-data="{field:'HiddenTag'}">暗标签</th>
+                    <th lay-data="{field:'SaleTime', sort: true}">上架时间</th>
+                    <th lay-data="{field:'AdminName', sort: true}">上传者</th>
+                    <th lay-data="{field:'UploadTime', sort: true}">上传时间</th>
+                    <th lay-data="{fixed: 'right', width:180, align:'center', toolbar: '#barDemo'}">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" id="aclick" lay-event="add">添加预选池</a>
+        <a class="layui-btn layui-btn-xs" id="aclick" lay-event="del">删除</a>
+    </script>
+    <script>
+        layui.use('table', function() {
+            var table = layui.table;
+            table.on('tool(test)', function(obj) {
+                 var layEvent = obj.event; 
+                if(layEvent === 'add'){ //查看
+                   layer.confirm('确认添加么?', {
+                    btn: ['确认删除', '取消'],
+                    btn3: function(index, layero) {}
+                }, function(index, layero) {
+                    $.ajax({
+                        url: "/addClothesToForPool",
+                        type: "post",
+                        data: {
+                            clothes_id: "O-"+obj.data.ID
+                        },
+                        async: false,
+                        success: function(data) {
+                            layer.msg("添加成功", {
+                                time: 1000
+                            });
+                        },
+                        error: function(data) {
+                            if (data.responseJSON.errcode == 1000) {
+                                window.open("/login.html", "_top");
+                            } else {
+                                layer.msg("拒绝失败:" + data.responseJSON.errmsg, {
+                                    time: 1000
+                                });
+                            }
+                        }
+                    });
+                }, function(index) {});
+                 } else if(layEvent === 'del'){ //删除
+                layer.confirm('确认删除么？删除后不能恢复,要不要考虑一下', {
+                    btn: ['确认删除', '取消'],
+                    btn3: function(index, layero) {}
+                }, function(index, layero) {
+                    $.ajax({
+                        url: "/deleteOfficial",
+                        type: "post",
+                        data: {
+                            id: obj.data.ID
+                        },
+                        async: false,
+                        success: function(data) {
+                            layer.msg("删除成功", {
+                                time: 1000
+                            });
+                        },
+                        error: function(data) {
+                        if (data.responseJSON.errcode==1000){
+                            window.open("/login.html","_top"); 
+                        }else{
+                            layer.msg("拒绝失败:" + data.responseJSON.errmsg, {
+                                time: 1000
+                            });
+                        }
+                    }
+                    });
+                }, function(index) {});
+                }
+              
+            });
+        });
+    </script>
+
+</body>
+
+</html>

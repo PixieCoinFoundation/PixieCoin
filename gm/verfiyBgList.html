@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="./css/global.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
+    <script src="./plugins/layui/layui.js">
+    </script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="demoTable" style="margin: 15px;">
+        <blockquote class="layui-elem-quote quoteBox">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input searchVal" placeholder="请输入搜索内容">
+                </div>
+                <a class="layui-btn" data-type="reload">搜索</a>
+            </div>
+        </blockquote>
+
+        <table class="layui-table" lay-data="{height:470, url:'/verifyBgList', page:true, id:'test'}" lay-filter="test">
+            <thead>
+                <tr>
+                    <th lay-data="{field:'PaperID', width:100, sort: true}">服装ID</th>
+                    <th lay-data="{field:'Cname', width:100}">背景名称</th>
+                    <th lay-data="{field:'UploadTime', width:150}">背景上传时间</th>
+                    <th lay-data="{field:'PartType'}">背景</th>
+                    <th lay-data="{field:'AuthorNickname'}">设计师昵称</th>
+                    <th lay-data="{field:'AuthorUsername'}">设计师ID</th>
+                    <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" id="aclick" lay-event="detail">进入审核</a>
+    </script>
+    <script>
+         layui.use('table', function() {
+            var table = layui.table;
+            table.on('tool(test)', function(obj) {
+                var data = obj.data;
+                window.location.href = "/verifyBgOne.html?id=" + data.PaperID
+            });
+        });
+    </script>
+
+</body>
+
+</html>

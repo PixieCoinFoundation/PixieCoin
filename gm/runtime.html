@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+    <script src="plugins/layui/layui.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/jquery.form.js"></script>
+</head>
+
+<body>
+    <div style="margin: 15px;">
+        <div>
+            <blockquote class="layui-elem-quote title">高级账号列表(维护状态下可游戏,S搭配全开))</blockquote>
+            <table class="layui-table">
+                <thead>
+                    <th>增加高级账号</th>
+                    <th><input type="text" id="account" name="title" placeholder="白名单账号" autocomplete="off" class="layui-input"></th>
+                    <th><button class="layui-btn" id="addAccount">立即提交</button></th>
+                </thead>
+            </table>
+            <table class="layui-table" id="whiteAccountTable" lay-filter="whiteAccount"></table>
+        </div>
+
+        <div>
+            <blockquote class="layui-elem-quote title">游戏服务器黑名单(新登录玩家不被负载均衡到黑名单中)</blockquote>
+            <table class="layui-table">
+                <thead>
+                    <th>增加黑名单游戏服务器</th>
+                    <th><input type="text" name="serverIP" id="serverIP" placeholder="增加黑名单游戏服务器    " autocomplete="off" class="layui-input"></th>
+                    <th><button class="layui-btn" id="addServer">增加</button></th>
+                </thead>
+            </table>
+            <table class="layui-table" id="serverTable" lay-filter="serverList"></table>
+
+        </div>
+        <div>
+            <blockquote class="layui-elem-quote title">热更新管理</blockquote>
+            <table class="layui-table">
+                <thead>
+                    <th>增加黑名单游戏服务器</th>
+                    <th>允许热更新</th>
+                </thead>
+                <tbody>
+                    <td>操作</td>
+                    <td>
+                        <div id="allow"></div>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <blockquote class="layui-elem-quote title">特殊账号列表(有游戏服务器黑名单时,只会连接到黑名单服务器;禁止热更新时也能热更新)</blockquote>
+            <table class="layui-table">
+                <thead>
+                    <th>增加特殊账号</th>
+                    <th><input type="text" id="blackAccount" placeholder="特殊账号" autocomplete="off" class="layui-input"></th>
+                    <th><button class="layui-btn" id="addBlackAccount">增加</button></th>
+                </thead>
+            </table>
+            <table class="layui-table" id="blackAccountTable" lay-filter="blackAccount"></table>
+        </div>
+
+
+
+    </div>
+
+    <script type="text/html" id="delWhiteAccount">
+        <a class="layui-btn layui-btn-radius  layui-btn-sm layui-btn-danger" lay-event="del">删除</a>
+    </script>
+    <script type="text/html" id="delBlackAccount">
+        <a class="layui-btn layui-btn-radius  layui-btn-sm layui-btn-danger" lay-event="del">删除</a>
+    </script>
+    <script type="text/html" id="delServer">
+        <a class="layui-btn layui-btn-radius  layui-btn-sm layui-btn-danger" lay-event="del">删除</a>
+    </script>
+    <script id="coreVersion" type="text/html"> {{# if(d.AllowPatch){ }}
+        <button class="layui-btn" id="allowPatch">forbid</button> {{# } else { }} <button class="layui-btn" id="allowPatch">allow</button> {{# } }}
+    </script>
+
+    <script defer="defer">
+        $('#addAccount').on('click', function() {
+            $.ajax({
+                url: '/addWhiteAccount/' + $('#account').val(),
+                type: 'GET',
+                success: function(data) {
+                    layui.use(['layer'], function() {
+                        layer = layui.layer;
+                        layer.msg("成功", {
+                            icon: 5,
+                            time: 3000,
+                            end: function() {}
+                        })
+                    })
+                },
+                error: function(data) {
+                    layui.use(['jquery', 'table', 'laytpl'], function() {
+                        layui.use(['layer'], function() {
+                            layer = layui.layer;
+                            layer.msg("提交失败,错误原因" + data.responseJSON.errmsg, {
+                                icon: 5,
+                                time: 3000,
+                                end: function() {}
+                            })
+                        })
+                    })
+                }
+            })
+        })
+        $('#addBlackAccount').on('click', function() {
+            $.ajax({
+                url: '/addBlackAccount/' + $('#blackAccount').val(),
+                type: 'GET',
+                success: function(data) {
+                    layui.use(['layer'], function() {
+                        layer = layui.layer;
+                        layer.msg("成功", {
+                            icon: 5,
+                            time: 3000,
+                            end: function() {}
+                        })
+                    })
+                },
+                error: function(data) {
+                    layui.use(['jquery', 'table', 'laytpl'], function() {
+                        layui.use(['layer'], function() {
+                            layer = layui.layer;
+                            layer.msg("提交失败,错误原因" + data.responseJSON.errmsg, {
+                                icon: 5,
+                                time: 3000,
+                                end: function() {}
+                            })
+                        })
+                    })
+                }
+            })
+        })
+        $('#addServer').on('click', function() {
+            $.ajax({
+                url: '/addServer/' + $('#serverIP').val(),
+                type: 'GET',
+                success: function(data) {
+                    layui.use(['layer'], function() {
+                        layer = layui.layer;
+                        layer.msg("成功", {
+                            icon: 5,
+                            time: 3000,
+                            end: function() {}
+                        })
+                    })
+                },
+                error: function(data) {
+                    layui.use(['jquery', 'table', 'laytpl'], function() {
+                        layui.use(['layer'], function() {
+                            layer = layui.layer;
+                            layer.msg("提交失败,错误原因" + data.responseJSON.errmsg, {
+                                icon: 5,
+                                time: 3000,
+                                end: function() {}
+                            })
+                        })
+                    })
+                }
+            })
+        })
+    </script>
+
+    <script>
+        layui.use(['jquery', 'table', 'laytpl', 'layer'], function() {
+            var table = layui.table;
+            var laytpl = layui.laytpl;
+
+            var $ = layui.$,
+                layer = layui.layer;
+
+            var res = {}
+            $.ajax({
+                url: "/getAccountList",
+                type: "get",
+                async: false,
+                success: function(data) {
+                    res = data
+                },
+                error: function(data) {}
+            });
+
+            var table = layui.table;
+
+            laytpl(coreVersion.innerHTML).render(res, function(html) {
+                document.getElementById('allow').innerHTML = html;
+            });
+            $('#allowPatch').on('click', function() {
+                $.ajax({
+                    url: '/allowPatch',
+                    type: 'GET',
+                    success: function(data) {
+                        layui.use(['layer'], function() {
+                            layer = layui.layer;
+                            layer.msg("成功", {
+                                icon: 5,
+                                time: 3000,
+                                end: function() {}
+                            })
+                        })
+                    },
+                    error: function(data) {
+                        layui.use(['jquery', 'table', 'laytpl'], function() {
+                            layui.use(['layer'], function() {
+                                layer = layui.layer;
+                                layer.msg("提交失败,错误原因" + data.responseJSON.errmsg, {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            })
+                        })
+                    }
+                })
+            })
+            table.render({
+                elem: '#whiteAccountTable',
+                height: 400,
+                page: false,
+                data: res.WhiteList,
+                cols: [
+                    [{
+                        field: 'ID',
+                        title: 'ID',
+                        minWidth: 150,
+                        sort: true,
+                    }, {
+                        fixed: 'right',
+                        width: 150,
+                        align: 'center',
+                        toolbar: '#delWhiteAccount'
+                    }]
+                ]
+            });
+            table.render({
+                elem: '#serverTable',
+                height: 200,
+                page: false,
+                data: res.ServerList,
+                cols: [
+                    [{
+                        field: 'ID',
+                        title: 'ID',
+                        sort: true,
+                    }, {
+                        fixed: 'right',
+                        width: 150,
+                        align: 'center',
+                        toolbar: '#delBlackAccount'
+                    }]
+                ]
+            });
+            table.render({
+                elem: '#blackAccountTable',
+                height: 400,
+                page: false,
+                data: res.BlackList,
+                cols: [
+                    [{
+                        field: 'ID',
+                        title: 'ID',
+                        sort: true,
+                    }, {
+                        fixed: 'right',
+                        width: 150,
+                        align: 'center',
+                        toolbar: '#delBlackAccount'
+                    }]
+                ]
+            });
+
+            table.on('tool(whiteAccount)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if (layEvent === 'del') { //删除
+                    layer.confirm('确定删除白名单用户么？', function(index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url: '/deleteWhiteAccount/' + data.ID,
+                            type: 'GET',
+                            async: false,
+                            success: function(data) {
+                                layer.msg("删除成功", {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            },
+                            error: function(data) {
+                                layer.msg("发生错误,错误原因:", {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+                        })
+                    });
+                }
+            });
+            table.on('tool(blackAccount)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if (layEvent === 'del') { //删除
+                    layer.confirm('确定删除黑名单用户？', function(index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url: '/deleteBlackAccount/' + data.ID,
+                            type: 'GET',
+                            async: false,
+                            success: function(data) {
+                                layer.msg("删除黑名单用户成功", {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            },
+                            error: function(data) {
+                                layer.msg("发生错误,错误原因:", {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+
+                        })
+                    });
+                }
+            });
+            table.on('tool(serverList)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if (layEvent === 'del') { //删除
+                    layer.confirm('确定删除黑名单服务器？', function(index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url: '/deleteServer/' + data.ID,
+                            type: 'GET',
+                            async: false,
+                            success: function(data) {
+                                layer.msg("删除黑名单服务器成功", {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            },
+                            error: function(data) {
+                                layer.msg("发生错误,错误原因:", {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+                        })
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

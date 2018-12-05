@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>layui模板引擎</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+    < /head>
+        < div class="layui-tab">
+            < ul class="layui-tab-title">
+                < li class="layui-this"> 导航1
+                    < /li>
+                        < li> 导航2
+                            < /li>
+
+                                < /ul>
+                                    < div class="layui-tab-content">
+                                        < div class="layui-tab-item layui-show" id="view"> 内容1
+                                            < /div>
+                                                < div class="layui-tab-item" id="view2"> 内容2
+                                                    < /div>
+                                                        < / div>
+                                                            < /div>
+
+                                                                < script id="demo" type="text/html">
+                                                                    < h3> { { d.title } }
+                                                                        < /h3>
+                                                                            < ul> { {# layui.each(d.list, function(index, item) {} }
+                                                                                < li>
+                                                                                    < span> { { item.modname } }
+                                                                                        < /span>
+                                                                                            < span> { { item.alias } }：
+                                                                                                < /span>
+                                                                                                    < span> { { item.site || '' } }
+                                                                                                        < /span>
+                                                                                                            < / li> { {#}); } } { {# if (d.list.length === 0) {} } 无数据 { {#} } }
+                                                                                                                < /ul>
+                                                                                                                    </script>
+
+                                                                                                                    <script>
+                                                                                                                        layui.use(['element', 'laytpl'], function() {
+                                                                                                                            var laytpl = layui.laytpl;
+                                                                                                                            var element = layui.element;
+
+                                                                                                                            //第三步：渲染模版
+                                                                                                                            var data1 = { //数据
+                                                                                                                                "title": "网站设置",
+                                                                                                                                "list": [{
+                                                                                                                                    "modname": "弹层",
+                                                                                                                                    "alias": "layer",
+                                                                                                                                    "site": "layer.layui.com"
+                                                                                                                                }, {
+                                                                                                                                    "modname": "表单",
+                                                                                                                                    "alias": "form"
+                                                                                                                                }],
+                                                                                                                            }
+                                                                                                                            var getTpl = demo.innerHTML,
+                                                                                                                                view = document.getElementById('view');
+                                                                                                                            laytpl(getTpl).render(data1, function(html) {
+                                                                                                                                view.innerHTML = html;
+                                                                                                                            });
+
+                                                                                                                            //第三步：渲染模版
+                                                                                                                            var data2 = { //数据
+                                                                                                                                "title": "用户管理",
+                                                                                                                                "list": [{
+                                                                                                                                    "modname": "弹层",
+                                                                                                                                    "alias": "layer",
+                                                                                                                                    "site": "layer.layui.com"
+                                                                                                                                }, {
+                                                                                                                                    "modname": "表单",
+                                                                                                                                    "alias": "form"
+                                                                                                                                }],
+                                                                                                                            }
+                                                                                                                            var getTpl2 = demo.innerHTML,
+                                                                                                                                view2 = document.getElementById('view2');
+                                                                                                                            laytpl(getTpl2).render(data2, function(html) {
+                                                                                                                                view2.innerHTML = html;
+                                                                                                                            });
+                                                                                                                        });
+                                                                                                                    </script>
+
+</html>

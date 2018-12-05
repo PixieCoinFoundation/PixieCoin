@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+
+</head>
+
+<body>
+    <div style="margin: 15px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色列表</label>
+            <div class="layui-input-block">
+                <select id="roleName" name="roleName" lay-verify="">
+                </select>
+            </div>
+        </div>
+        <div>
+            <button class="layui-btn layui-btn-primary" id="save">保存</button>
+            <a href="javascript:history.back()" type="button" class="layui-btn layui-btn-primary">返回</a>
+        </div>
+    </div>
+    <script type="text/javascript" src="plugins/layui/layui.js"></script>
+    <script>
+        layui.use(['table', 'form'], function() {
+            var table = layui.table;
+            var roleList = {};
+            var form = layui.form;
+            $.ajax({
+                url: "/getRoleList",
+                type: "get",
+                async: false,
+                success: function(data) {
+                    roleList = data.data
+                }
+            })
+            for (var index in roleList) {
+                var content = '<option value="' + roleList[index].ID + '">' + roleList[index].RoleName + '</option>'
+                $("#roleName").append(content);
+            }
+        });
+        $(document).on('click', '#save', function() {
+            $.ajax({
+                url: "/changeRole",
+                type: "POST",
+                data: {
+                    RoleID: $("#roleName").val(),
+                },
+                dataType: 'json',
+                success: function(result) {
+                   window.location.href = "/adminList.html"
+                }
+            });
+        })
+    </script>
+</body>
+
+</html>

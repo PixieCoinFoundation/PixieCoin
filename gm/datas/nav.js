@@ -1,0 +1,224 @@
+var navs = [{
+    "title": "玩家信息",
+    "icon": "fa-cubes",
+    "spread": true,
+    "children": [{
+        "title": "基本信息",
+        "icon": "&#xe641;",
+        "href": "player.html"
+    }, {
+        "title": "玩家衣服",
+        "icon": "&#xe63c;",
+        "href": "form.html"
+    }, {
+        "title": "玩家套装",
+        "icon": "&#xe63c;",
+        "href": "table.html"
+    }, {
+        "title": "玩家剧情",
+        "icon": "&#xe609;",
+        "href": "nav.html"
+    }, {
+        "title": "其他信息",
+        "icon": "&#xe60c;",
+        "href": "auxiliar.html"
+    }]
+}, {
+    "title": "图纸",
+    "icon": "fa-cogs",
+    "spread": false,
+    "children": [{
+        "title": "所有图纸",
+        "icon": "fa-table",
+        "href": "btable.html"
+    }, {
+        "title": "在售图纸",
+        "icon": "fa-navicon",
+        "href": "navbar.html"
+    }, {
+        "title": "Tab组件",
+        "icon": "&#xe62a;",
+        "href": "tab.html"
+    }, {
+        "title": "Laytpl+Laypage",
+        "icon": "&#xe628;",
+        "href": "paging.html"
+    }]
+},{
+    "title": "用户",
+    "icon": "&#x1002;",
+    "spread": false,
+    "children": [{
+        "title": "后台管理员",
+        "icon": "fa-check-square-o",
+        "href": "admin.html"
+    }, {
+        "title": "审核管理员",
+        "icon": "fa-check-square-o",
+        "href": "verifyAdmin.html"
+    }, {
+        "title": "角色管理",
+        "icon": "fa-check-square-o",
+        "href": "roleManage.html"
+    }]
+},{
+    "title": "管理员管理",
+    "icon": "fa-stop-circle",
+    "href": "#",
+    "spread": false,
+    "children": [{
+        "title": "管理员列表",
+        "icon": "fa-github",
+        "href": "adminList.html"
+    }, {
+        "title": "角色管理",
+        "icon": "fa-github",
+        "href": "roleManage.html"
+    }, {
+        "title": "API列表",
+        "icon": "fa-github",
+        "href": "apiList.html"
+    }, {
+        "title": "权限管理",
+        "icon": "fa-github",
+        "href": "powerManage.html"
+    }]
+}, {
+    "title": "活动",
+    "icon": "fa-address-book",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "活动列表",
+        "icon": "fa-github",
+        "href": "https://www.github.com/"
+    }, {
+        "title": "添加活动",
+        "icon": "fa-qq",
+        "href": "http://www.qq.com/"
+    }, {
+        "title": "过期活动",
+        "icon": "&#xe609;",
+        "href": "http://fly.layui.com/"
+    }, {
+        "title": "",
+        "icon": "fa-weibo",
+        "href": "http://weibo.com/"
+    }]
+}, {
+    "title": "服装预审列表",
+    "icon": "fa-stop-circle",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "衣服预审",
+        "icon": "fa-github",
+        "href": "verifyClothes.html"
+    }, {
+        "title": "已通过服装",
+        "icon": "fa-qq",
+        "href": "passClothes.html"
+    }, {
+        "title": "已拒绝服装",
+        "icon": "fa-qq",
+        "href": "rejectClothes.html"
+    }]
+}, {
+    "title": "背景预审列表",
+    "icon": "fa-stop-circle",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "背景预审",
+        "icon": "fa-github",
+        "href": "verfiyBgList.html"
+    }, {
+        "title": "已通过背景",
+        "icon": "fa-qq",
+        "href": "passBg.html"
+    }, {
+        "title": "已拒绝背景",
+        "icon": "fa-qq",
+        "href": "rejectBg.html"
+    }]
+}, {
+    "title": "作品举报",
+    "icon": "fa-stop-circle",
+    "href": "#",
+    "spread": false,
+    "children": [{
+        "title": "被举报作品",
+        "icon": "fa-github",
+        "href": "cop.html"
+    }, {
+        "title": "被下架作品",
+        "icon": "fa-github",
+        "href": "cop.html"
+    }, {
+        "title": "申诉列表",
+        "icon": "fa-github",
+        "href": "cop.html"
+    }]
+}, {
+    "title": "管理员管理",
+    "icon": "fa-stop-circle",
+    "href": "#",
+    "spread": false,
+    "children": [{
+        "title": "管理员列表",
+        "icon": "fa-github",
+        "href": "adminList.html"
+    }, {
+        "title": "角色管理",
+        "icon": "fa-github",
+        "href": "roleManage.html"
+    }, {
+        "title": "API列表",
+        "icon": "fa-github",
+        "href": "apiList.html"
+    }, {
+        "title": "权限管理",
+        "icon": "fa-github",
+        "href": "powerManage.html"
+    }]
+},{
+    "title": "服务器管理",
+    "icon": "fa-stop-circle",
+    "href": "#",
+    "spread": false,
+    "children": [{
+        "title": "维护",
+        "icon": "fa-github",
+        "href": "maintenance.html"
+    },{
+        "title": "运行管理",
+        "icon": "fa-github",
+        "href": "runtime.html"
+    },{
+        "title": "上传热更",
+        "icon": "fa-github",
+        "href": "uploadPack.html"
+    }]
+}, {
+    "title": "上传相关",
+    "icon": "fa-stop-circle",
+    "href": "#",
+    "spread": false,
+    "children": [{
+        "title": "上传服装",
+        "icon": "fa-github",
+        "href": "uploadClothes.html"
+    }, {
+        "title": "上传背景",
+        "icon": "fa-github",
+        "href": "uploadBackground.html"
+    }, {
+        "title": "服装列表",
+        "icon": "fa-github",
+        "href": "clothesList.html"
+    }, {
+        "title": "背景列表",
+        "icon": "fa-github",
+        "href": "bgList.html"
+    }]
+}];

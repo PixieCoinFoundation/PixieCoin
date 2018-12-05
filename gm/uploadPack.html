@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Paging</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="css/global.css" media="all">
+    <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css">
+    <script src="plugins/layui/layui.js">
+    </script>
+    <script src="js/jquery-3.3.1.min.js">
+    </script>
+    <script src="./js/jquery.form.js"></script>
+</head>
+
+<body>
+    <div style="margin: 15px;">
+        <div>
+            <blockquote class="layui-elem-quote title">当前版本</blockquote>
+            <table class="layui-table">
+                <tbody>
+                    <tr>
+                        <td>当前大版本</td>
+                        <td>
+                            <div id="coreVersionD"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>当前小版本</td>
+                        <td>
+                            <div id="scriptVersionD"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>游戏下载地址</td>
+                        <td>
+                            <div id="gameDownUrlD"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>资源文件信息</td>
+                        <td>
+                            <div id="versionFileD"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <blockquote class="layui-elem-quote title">更新新版本</blockquote>
+            <form class="layui-form" id="fromData" method="POST" enctype="multipart/form-data">
+                <div class="layui-form-item">
+                    <label class="layui-form-label ">大版本号:</label>
+                    <div class="layui-input-block">
+                        <div id="coreVersionInputHtml"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">小版本号:</label>
+                    <div class="layui-input-block">
+                        <div id="scriptVersionInputHtml"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label ">游戏下载地址:</label>
+                    <div class="layui-input-block">
+                        <div id="gameDownUrlInputHtml"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">安卓更新包:</label>
+                    <div class="file-image">
+                        <img alt="" id="androidPackFile" width="100px" height="100px" />
+                        <input type="file" name="androidPack" id="androidPack" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">iOS更新包:</label>
+                    <div class="file-image">
+                        <img alt="" id="iOSPackFile" width="100px" height="100px" />
+                        <input type="file" name="iOSPack" id="iOSPack" />
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="btn_submit" lay-submit lay-filter="formDemo">确认提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+<script id="coreVersionInput" type="text/html">
+    <input type="text" name="CoreVersion" value="{{ d.CoreVersion }}" required lay-verify="required" placeholder="大版本号" autocomplete="off" class="layui-input">
+</script>
+<script id="coreVersion" type="text/html">{{d.CoreVersion}}</script>
+            
+<script id="scriptVersionInput" type="text/html">
+    <input type="text" name="ScriptVersion" value="{{ d.ScriptVersion }}" required lay-verify="required" placeholder="小版本号" autocomplete="off" class="layui-input">
+</script>
+<script id="scriptVersion" type="text/html">{{d.ScriptVersion}}</script>
+            
+<script id="gameDownUrlInput" type="text/html">
+    <input type="text" name="DownLoadUrl" value="{{ d.DownLoadUrl }}" required lay-verify="required" placeholder="游戏下载地址" class="layui-input">
+</script>
+<script id="gameDownUrl" type="text/html">{{d.DownLoadUrl}}</script>
+<script id="versionFile" type="text/html">{{d.VersionFile}}</script>
+
+    <script>
+        function readAsDataURL() {
+            //检验是否为图像文件
+            var file = document.getElementById("file").files[0];
+
+            var reader = new FileReader();
+            //将文件以Data URL形式读入页面
+            reader.readAsDataURL(file);
+            reader.onload = function(e) {
+                var result = document.getElementById("img");
+                //显示文件
+                result.src = this.result;
+            }
+        }
+        layui.use(['form', 'table', 'laytpl'], function() {
+            var form = layui.form; //监听提交 
+            var table = layui.table;
+            var laytpl = layui.laytpl;
+            layer = layui.layer;
+
+            var res = {}
+                $.ajax({
+                    url: "/getVersion",
+                    type: "get",
+                    async: false,
+                    success: function(data) {
+                        res = data
+                    },
+                    error: function(data) {}
+                });
+
+
+            laytpl(coreVersion.innerHTML).render(res, function(html) {
+                document.getElementById('coreVersionD').innerHTML = html;
+            });
+            laytpl(coreVersionInput.innerHTML).render(res, function(html) {
+                document.getElementById('coreVersionInputHtml').innerHTML = html;
+            });
+            laytpl(scriptVersion.innerHTML).render(res, function(html) {
+                document.getElementById('scriptVersionD').innerHTML = html;
+            });
+            laytpl(scriptVersionInput.innerHTML).render(res, function(html) {
+                document.getElementById('scriptVersionInputHtml').innerHTML = html;
+            });
+            laytpl(gameDownUrlInput.innerHTML).render(res, function(html) {
+                document.getElementById('gameDownUrlInputHtml').innerHTML = html;
+            });
+            laytpl(gameDownUrl.innerHTML).render(res, function(html) {
+                view = document.getElementById('gameDownUrlD').innerHTML = html;
+            });
+            laytpl(versionFile.innerHTML).render(res, function(html) {
+                document.getElementById('versionFileD').innerHTML = html;
+            });
+
+            form.on('submit(formDemo)', function(data) {
+                return false;
+            });
+            $(document).on('click', '#btn_submit', function() {
+                $('#fromData').ajaxSubmit( //ajax方式提交表单  
+                    {
+                        url: '/updateVersion',
+                        type: 'post',
+                        dataType: 'json',
+                        async: false,
+                        success: function(mes) {
+                            if (mes.status == 200) {
+                                layer.msg("success", {
+                                    icon: 6,
+                                    time: 3000,
+                                    end: function() {
+                                        location.reload();
+                                    }
+                                })
+                            } else {
+                                layer.msg("提交失败,错误原因" + mes.responseJSON.errmsg, {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+                        },
+                        error: function(mes) {
+                            if (mes.status == 200) {
+                                layer.msg("success", {
+                                    icon: 6,
+                                    time: 3000,
+                                    end: function() {
+                                        location.reload();
+                                    }
+                                })
+                            } else {
+                                layer.msg("提交失败,错误原因" + mes.responseJSON.errmsg, {
+                                    icon: 5,
+                                    time: 3000,
+                                    end: function() {}
+                                })
+                            }
+                        },
+                        clearForm: false, //禁止清楚表单  
+                        resetForm: false //禁止重置表单  
+                    });
+            });
+
+        });
+    </script>
+</body>
+
+</html>
